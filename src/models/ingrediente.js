@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   ingrediente.associate = function(models) {
     // associations can be defined here
-    ingrediente.belongsToMany(models.hamburguesa, { through: {models: hamburguesa_ingrediente, unique: true}});
+    ingrediente.belongsToMany(models.hamburguesa, { through: models.hamburguesa_ingrediente, foreignKey: 'hamburguesaId', unique: true });
   };
   return ingrediente;
 };
