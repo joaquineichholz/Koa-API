@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   hamburguesa.associate = function(models) {
     // associations can be defined here
-    hamburguesa.belongsToMany(models.ingrediente, { through: models.hamburguesa_ingrediente, foreignKey: 'ingreienteId', unique: true });
   };
   return hamburguesa;
 };
