@@ -89,9 +89,6 @@ router.post('hamburguesa', '/', async (ctx) => {
         max_id++ 
       }
 
-      console.log('\n\n -----------    -------------\n\t', max_id, "\n\n ------------------------")
-
-
       const hamburguesa = {
         id: max_id,
         nombre: nombre,
@@ -108,11 +105,8 @@ router.post('hamburguesa', '/', async (ctx) => {
       ctx.response.body = new_hamburguesa;
       ctx.response.message = 'hamburguesa creada'
       ctx.response.status = 200;
-
-
     });
 
-module.exports = router;
 
  // DELTE ONE Hamburger with an id
  router.del('/hamburguesa', '/:id', async (ctx) => {
@@ -146,3 +140,5 @@ module.exports = router;
       }
     })
  
+
+    module.exports = router;
