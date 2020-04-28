@@ -199,8 +199,12 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
       console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", hamburguesa, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
 
       hamburguesa.update(ctx.request.body)
-      await hamburguesa.save()
-      ctx.response.body = hamburguesa;
+      await hamburguesa.save();
+      ctx.response.body = {'id': hamburguesa.id, 
+                            'nombre': hamburguesa.nombre, 
+                            'precio': hamburguesa.precio, 
+                            'descripcion': hamburguesa.descripcion, 
+                            'imagen': hamburguesa.imagen};
       ctx.response.status = 200;
       console.log("200")
       return
