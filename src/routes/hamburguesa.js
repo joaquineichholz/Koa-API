@@ -7,7 +7,9 @@ const router = new KoaRouter();
 router.get('hamburguesa', '/', async (ctx) => {
   console.log("Buscar hamburguesa");
 
-    const hamburguesas = await ctx.orm.hamburguesa.findAll();
+    const hamburguesas = await ctx.orm.hamburguesa.findAll({
+      attributes: ['nombre', 'precio', 'descripcion', 'imagen']
+    });
     console.log(hamburguesas);
 
     ctx.response.body = hamburguesas;
