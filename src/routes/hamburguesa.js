@@ -160,42 +160,57 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
   precio = ctx.request.body.precio;
   imagen = ctx.request.body.imagen;
 
-  if (!nombre || !descripcion || !precio || ! imagen) {
+  if (!nombre && !descripcion && !precio && !imagen) {
     ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
-    console.log('parametros invalido, falta 1')
+    console.log('parametros invalido, falta al menos 1')
     return
   }
 
   console.log(Object.keys(ctx.request.body))
   const set = new Set(Object.keys(ctx.request.body));
 
-  if (set.size != 4) {
+  /*if (set.size != 4) {
     ctx.response.body = "parametros invalido";
     ctx.response.status = 400;
     console.log('no hay 4 exactamente parametros')
     return
-  }
+  }*/
 
   var hamburguesa = await ctx.orm.hamburguesa.findByPk(id_,{
     attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
   })
-  /*.then(burga => {
-    console.log('then update')
-    console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", burga.dataValues, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
-    burga.updateAttributes({
-      nombre: nombre,
-      precio: precio,
-      descripcion: descripcion,
-      imagen: imagen
-    })
-
-    console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", burga, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
-
-  })
-    */
-
     if (hamburguesa) {
+
+      var n_input = 5;
+
+      if (nombre) {
+        nombre = hamburguesa.nombre;
+        n_input--
+      }
+      if (!precio) {
+        precio = hamburguesa.precio;
+        n_input--
+      }
+      if (!descripcion) {
+        descripcion = hamburguesa.descripcion;
+        n_input--
+      }
+      if (!imagen) {
+        imagen = hamburguesa.imagen;
+        n_input--
+      }
+
+      // tengo parametro extra?
+      if (n_input != set.size) {
+        ctx.response.body = "paramtros invalidos";
+        ctx.response.status = 400;
+        console.log('n_input: ', n_input)
+        console.log('set.size: ', set.size)
+        console.log('parametros de más invalido:')
+        return
+      }
+
       console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", hamburguesa, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
 
       hamburguesa.update(ctx.request.body)

@@ -5,7 +5,7 @@ const Sequelize = require('sequelize');
 const router = new KoaRouter();
 
 
-// GET Burguers
+// GET ingediente
 router.get('ingrediente', '/', async (ctx) => {
   console.log("Buscar ingrediente");
 
@@ -18,7 +18,7 @@ router.get('ingrediente', '/', async (ctx) => {
     ctx.response.status = 200;
  });
 
- // GET ONE Hamburger with an id
+ // GET ONE ingediente with an id
  router.get('/ingrediente', '/:id', async (ctx) => {
   console.log('GET ONE')
 
@@ -34,7 +34,7 @@ router.get('ingrediente', '/', async (ctx) => {
       };
  
     const ingrediente = await ctx.orm.ingrediente.findByPk(id_,{
-      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
+      attributes: ['id', 'nombre', 'descripcion']
     });
 
       if (ingrediente) {
@@ -54,47 +54,52 @@ router.post('ingrediente', '/', async (ctx) => {
     // Validate request
       // Create a ingrediente
       console.log("crear ingrediente")
+      function isInteger(x) { return (Number.isInteger(Number(x))); }
+
+      
+      id = ctx.request.body.id;
       nombre = ctx.request.body.nombre;
       descripcion = ctx.request.body.descripcion;
-      precio = ctx.request.body.precio;
-      imagen = ctx.request.body.imagen;
 
-      if (!nombre || !descripcion || !precio || ! imagen) {
+      if (!id, !nombre || !descripcion) {
         ctx.response.body = "input invalido";
         ctx.response.status = 400;
+        console.log('-- falta un input -- ')
         return
+      }
+
+      if (!isInteger(id)) {
+        ctx.response.body = "input invalido";
+        ctx.response.status = 400;
+        console.log('-- el id del ingrediente id no es un numero -- ')
+        return 
       }
 
       console.log(Object.keys(ctx.request.body))
       const set = new Set(Object.keys(ctx.request.body));
 
-      if (set.size != 4) {
+      if (set.size != 3) {
         ctx.response.body = "input invalido";
         ctx.response.status = 400;
+        console.log('-- el numero de inputs no es 3 -- ')
         return
       }
 
-      var ingredientes = await ctx.orm.ingrediente.findAll({
-        attributes: [[Sequelize.fn('max', Sequelize.col('id')), 'max_id']],
-        raw: true,
+      const ingrediente_ = await ctx.orm.ingrediente.findByPk(id,{
+        attributes: ['id', 'nombre', 'descripcion']
       });
-
-      var max_id = ingredientes[0].max_id 
-
-      if (!ingredientes[0].max_id) {
-        max_id = 1;
-        console.log('No habian ingredientes')
-      }
-      else {
-        max_id++ 
-      }
-
+  
+        if (ingrediente_) {
+          ctx.response.body = "input invalido";
+          ctx.response.status = 400;
+          console.log('-- el id del ingrediente ya existia -- ')
+          return
+  
+        }
       const ingrediente = {
-        id: max_id,
+        id: id,
         nombre: nombre,
         descripcion: descripcion,
-        precio: precio,
-        imagen: imagen
       };
       
       console.log("parametros: ", ingrediente)
@@ -108,7 +113,7 @@ router.post('ingrediente', '/', async (ctx) => {
     });
 
 
- // DELTE ONE Hamburger with an id
+ // DELTE ONE ingediente with an id
  router.del('/ingrediente', '/:id', async (ctx) => {
   console.log('DELETE ONE')
 
@@ -124,7 +129,7 @@ router.post('ingrediente', '/', async (ctx) => {
       };
  
     const ingrediente = await ctx.orm.ingrediente.findByPk(id_,{
-      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
+      attributes: ['id', 'nombre', 'descripcion']
     });
 
       if (ingrediente) {
