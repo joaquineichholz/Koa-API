@@ -102,9 +102,9 @@ router.post('hamburguesa', '/', async (ctx) => {
       // Save hamburguesa in the database
       const new_hamburguesa = ctx.orm.hamburguesa.build(hamburguesa);
       new_hamburguesa.save()
-      ctx.response.body = new_hamburguesa;
+      ctx.response.body = hamburguesa;
       ctx.response.message = 'hamburguesa creada'
-      ctx.response.status = 200;
+      ctx.response.status = 201;
     });
 
 
@@ -139,6 +139,81 @@ router.post('hamburguesa', '/', async (ctx) => {
         ctx.response.status = 404;
       }
     })
+
+
+// PATCH ONE Hamburger with an id
+router.patch('hamburguesa', '/:id', async (ctx) => {
+  console.log('patch burger')
+  function isInteger(x) { return (Number.isInteger(Number(x))); }
+
+  const id_ = ctx.params.id;
+
+  if (!isInteger(id_)) {
+      ctx.response.body = "paramtros invalidos";
+      ctx.response.status = 400;
+      console.log('id invalido:')
+      return
+    };
+
+  nombre = ctx.request.body.nombre;
+  descripcion = ctx.request.body.descripcion;
+  precio = ctx.request.body.precio;
+  imagen = ctx.request.body.imagen;
+
+  if (!nombre || !descripcion || !precio || ! imagen) {
+    ctx.response.body = "parametros invalidos";
+    ctx.response.status = 400;
+    console.log('parametros invalido, falta 1')
+    return
+  }
+
+  console.log(Object.keys(ctx.request.body))
+  const set = new Set(Object.keys(ctx.request.body));
+
+  if (set.size != 4) {
+    ctx.response.body = "parametros invalido";
+    ctx.response.status = 400;
+    console.log('no hay 4 exactamente parametros')
+    return
+  }
+
+  var hamburguesa = await ctx.orm.hamburguesa.findByPk(id_,{
+    attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
+  })
+  /*.then(burga => {
+    console.log('then update')
+    console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", burga.dataValues, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+    burga.updateAttributes({
+      nombre: nombre,
+      precio: precio,
+      descripcion: descripcion,
+      imagen: imagen
+    })
+
+    console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", burga, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+
+  })
+    */
+
+    if (hamburguesa) {
+      console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", hamburguesa, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+
+      hamburguesa.update(ctx.request.body)
+      await hamburguesa.save()
+      ctx.response.body = hamburguesa;
+      ctx.response.status = 200;
+      console.log("200")
+      return
+
+    } else {
+      console.log("404 else")
+      ctx.response.body = "hamburguesa inexistente";
+      ctx.response.status = 404;
+      
+    }
+
+});
+
  
 
     module.exports = router;
