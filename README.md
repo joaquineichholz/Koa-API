@@ -23,11 +23,10 @@ Template built with [koa](http://koajs.com/) for IIC2513 - Tecnologías y Aplica
 
 ### Create development database
 
-
 ```sh
 createdb iic2513template_dev
 ```
-her
+
 ### Run migrations
 ```sh
 ./node_modules/.bin/sequelize db:migrate
