@@ -8,7 +8,7 @@ router.get('hamburguesa', '/', async (ctx) => {
   console.log("Buscar hamburguesa");
 
     const hamburguesas = await ctx.orm.hamburguesa.findAll({
-      attributes: ['nombre', 'precio', 'descripcion', 'imagen']
+      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
     });
     console.log(hamburguesas);
 
