@@ -40,15 +40,17 @@ router.get('hamburguesa', '/', async (ctx) => {
 
       if (hamburguesa) {
         const hamburguesa_ingrediente = await ctx.orm.hamburguesa_ingrediente.findAll({
-          attributes: ['id', 'hamburguesaId', 'ingredienteId'],
+          attributes: ['ingredienteId'],
           where: {
             'hamburguesaId': hamburguesa.id
-          }
+          }, 
+          raw: true
         });
         console.log('- - o - - o - - o - - o - - o - - o - - o - - o - - o - - o - - o ')
-        console.log(hamburguesa_ingrediente)
+        console.log(ctx.request.host)
+
         console.log('- - o - - o - - o - - o - - o - - o - - o - - o - - o - - o - - o ')
-        ctx.response.body = hamburguesa;
+        ctx.response.body = ctx.request.host;
         ctx.response.status = 200;
         console.log("200")
         
