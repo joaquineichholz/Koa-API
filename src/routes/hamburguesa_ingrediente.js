@@ -76,10 +76,28 @@ router.put('hamburguesa', '/:hamburguesaId/ingrediente/:ingredienteId', async (c
           "hamburguesaId": hid,
           "ingredienteId": iid
         }
-        const hamburguesa_ingrediente = ctx.orm.hamburguesa_ingrediente.build(h_i);
-        hamburguesa_ingrediente.save()
-        ctx.response.body = 'Ingrediente agregado';
-        ctx.response.status = 201;
+
+        const existe = await ctx.orm.hamburguesa_ingrediente.findAll({
+          attributes: ['id', 'hamburguesaId', 'ingredienteId'],
+          where: {
+            'hamburguesaId': hid,
+            'ingredienteId': iid
+          }, 
+          raw: true
+        });
+
+        if (existe.length == 0) {
+          const hamburguesa_ingrediente = ctx.orm.hamburguesa_ingrediente.build(h_i);
+          hamburguesa_ingrediente.save()
+          ctx.response.body = 'Ingrediente agregado';
+          ctx.response.status = 201;
+          return
+        }
+        else {
+          ctx.response.body = 'ingrediente agregado';
+          ctx.response.status = 201;
+        }
+        
 
     });
 

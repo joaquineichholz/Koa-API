@@ -10,11 +10,40 @@ router.get('hamburguesa', '/', async (ctx) => {
   console.log("Buscar hamburguesa");
 
     const hamburguesas = await ctx.orm.hamburguesa.findAll({
-      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
+      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen'], 
+      raw: true
     });
+
+    var output = []
+
+    for (x=0; x < hamburguesas.length; x++){
+      const hamburguesa_ingrediente = await ctx.orm.hamburguesa_ingrediente.findAll({
+        attributes: ['ingredienteId'],
+        where: {
+          'hamburguesaId': hamburguesas[x].id
+        }, 
+        raw: true
+      });
+
+      var ingredientes = []
+      for (i=0; i<hamburguesa_ingrediente.length; i++) {
+        ingredientes.push({
+          "path": "https://" + ctx.request.host + "/ingrediente/" + hamburguesa_ingrediente[i].ingredienteId
+        });
+      }
+      output.push({
+        "id": hamburguesas[x].id,
+        "nombre": hamburguesas[x].nombre,
+        "precio": hamburguesas[x].precio,
+        "descripcion": hamburguesas[x].descripcion,
+        "ingredientes": ingredientes
+      });
+    }
+
+    
     console.log(hamburguesas);
 
-    ctx.response.body = hamburguesas;
+    ctx.response.body = output;
     ctx.response.status = 200;
  });
 
@@ -27,7 +56,9 @@ router.get('hamburguesa', '/', async (ctx) => {
   const id_ = ctx.params.id;
 
     if (!isInteger(id_)) {
-        ctx.response.body = "id invalido";
+        ctx.response.body = {"menssage": "id invalido", 
+        "body": 
+          {}};
         ctx.response.status = 400;
         console.log('id integer:', isInteger(id_))
         return
@@ -46,18 +77,34 @@ router.get('hamburguesa', '/', async (ctx) => {
           }, 
           raw: true
         });
-        console.log('- - o - - o - - o - - o - - o - - o - - o - - o - - o - - o - - o ')
-        console.log(ctx.request.host)
 
-        console.log('- - o - - o - - o - - o - - o - - o - - o - - o - - o - - o - - o ')
-        ctx.response.body = ctx.request.host;
+        var ingredientes = []
+        for (i=0; i<hamburguesa_ingrediente.length; i++) {
+          ingredientes.push({
+            "path": "https://" + ctx.request.host + "/ingrediente/" + hamburguesa_ingrediente[i].ingredienteId
+          });
+        }
+
+
+        ctx.response.body = {"menssage": "operacion exitosa", 
+        "body": 
+          {
+          "id": hamburguesa.id,
+          "nombre": hamburguesa.nombre,
+          "precio": hamburguesa.precio,
+          "descripcion": hamburguesa.descripcion,
+          "ingredientes": ingredientes
+        }};
+
         ctx.response.status = 200;
         console.log("200")
         
 
       } else {
         console.log("404 else")
-        ctx.response.body = "hamburguesa inexistente";
+        ctx.response.body = {"menssage": "hamburguesa inexistente", 
+        "body": 
+          {}};
         ctx.response.status = 404;
       }
     })
