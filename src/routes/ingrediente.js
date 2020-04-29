@@ -61,7 +61,7 @@ router.post('ingrediente', '/', async (ctx) => {
       nombre = ctx.request.body.nombre;
       descripcion = ctx.request.body.descripcion;
 
-      if (!id, !nombre || !descripcion) {
+      if (!id || !nombre || !descripcion) {
         ctx.response.body = "input invalido";
         ctx.response.status = 400;
         console.log('-- falta un input -- ')
@@ -107,7 +107,7 @@ router.post('ingrediente', '/', async (ctx) => {
       // Save ingrediente in the database
       const new_ingrediente = ctx.orm.ingrediente.build(ingrediente);
       new_ingrediente.save()
-      ctx.response.body = new_ingrediente;
+      ctx.response.body = ingrediente;
       ctx.response.message = 'ingrediente creada'
       ctx.response.status = 200;
     });

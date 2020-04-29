@@ -34,13 +34,24 @@ router.get('hamburguesa', '/', async (ctx) => {
       };
  
     const hamburguesa = await ctx.orm.hamburguesa.findByPk(id_,{
-      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen']
+      attributes: ['id', 'nombre', 'precio', 'descripcion', 'imagen'], 
+ 
     });
 
       if (hamburguesa) {
+        const hamburguesa_ingrediente = await ctx.orm.hamburguesa_ingrediente.findAll({
+          attributes: ['id', 'hamburguesaId', 'ingredienteId'],
+          where: {
+            'hamburguesaId': hamburguesa.id
+          }
+        });
+        console.log('- - o - - o - - o - - o - - o - - o - - o - - o - - o - - o - - o ')
+        console.log(hamburguesa_ingrediente)
+        console.log('- - o - - o - - o - - o - - o - - o - - o - - o - - o - - o - - o ')
         ctx.response.body = hamburguesa;
         ctx.response.status = 200;
         console.log("200")
+        
 
       } else {
         console.log("404 else")
@@ -232,7 +243,5 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
     }
 
 });
-
- 
 
     module.exports = router;
