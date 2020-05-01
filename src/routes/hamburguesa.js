@@ -45,7 +45,80 @@ router.get('hamburguesa', '/', async (ctx) => {
 
     ctx.response.body = output;
     ctx.response.status = 200;
+    ctx.response.message = "resultados obtenidos"
  });
+
+ // POST new hamburguesa
+router.post('hamburguesa', '/', async (ctx) => {
+  // Validate request
+    // Create a hamburguesa
+    console.log("crear hamburguesa")
+    nombre = ctx.request.body.nombre;
+    descripcion = ctx.request.body.descripcion;
+    precio = ctx.request.body.precio;
+    imagen = ctx.request.body.imagen;
+
+    if (!nombre || !descripcion || !precio || ! imagen) {
+      ctx.response.body = "input invalido";
+      ctx.response.message = "input invalido";
+      ctx.response.status = 400;
+      return
+    }
+
+    console.log(Object.keys(ctx.request.body))
+    const set = new Set(Object.keys(ctx.request.body));
+
+    if (set.size != 4) {
+      ctx.response.body = "input invalido";
+      ctx.response.message = "input invalido";
+      ctx.response.status = 400;
+      return
+    }
+
+    var hamburguesas = await ctx.orm.hamburguesa.findAll({
+      attributes: [[Sequelize.fn('max', Sequelize.col('id')), 'max_id']],
+      raw: true,
+    });
+
+    var max_id = hamburguesas[0].max_id 
+
+    if (!hamburguesas[0].max_id) {
+      max_id = 1;
+      console.log('No habian hamburguesas')
+    }
+    else {
+      max_id++ 
+    }
+
+    const hamburguesa = {
+      id: max_id,
+      nombre: nombre,
+      descripcion: descripcion,
+      precio: precio,
+      imagen: imagen
+    };
+    
+    console.log("parametros: ", hamburguesa)
+  
+    // Save hamburguesa in the database
+    const new_hamburguesa = ctx.orm.hamburguesa.build(hamburguesa);
+    new_hamburguesa.save()
+
+    const output = {
+      "id": hamburguesas.id,
+      "nombre": hamburguesas.nombre,
+      "precio": hamburguesas.precio,
+      "descripcion": hamburguesas.descripcion,
+      "ingredientes": [
+        {
+
+        }
+      ]
+    }
+    ctx.response.body = output;
+    ctx.response.message = 'hamburguesa creada'
+    ctx.response.status = 201;
+  });
 
  // GET ONE Hamburger with an id
  router.get('/hamburguesa', '/:id', async (ctx) => {
@@ -55,10 +128,9 @@ router.get('hamburguesa', '/', async (ctx) => {
 
   const id_ = ctx.params.id;
 
-    if (!isInteger(id_)) {
-        ctx.response.body = {"menssage": "id invalido", 
-        "body": 
-          {}};
+      if (!isInteger(id_)) {
+        ctx.response.body = "id invalido";
+        ctx.response.message = "id invalido";  
         ctx.response.status = 400;
         console.log('id integer:', isInteger(id_))
         return
@@ -102,70 +174,11 @@ router.get('hamburguesa', '/', async (ctx) => {
 
       } else {
         console.log("404 else")
-        ctx.response.body = {"menssage": "hamburguesa inexistente", 
-        "body": 
-          {}};
+        ctx.response.body = "hamburguesa inexistente";
+        ctx.response.menssage = "hamburguesa inexistente";
         ctx.response.status = 404;
       }
     })
-
-// POST new hamburguesa
-router.post('hamburguesa', '/', async (ctx) => {
-    // Validate request
-      // Create a hamburguesa
-      console.log("crear hamburguesa")
-      nombre = ctx.request.body.nombre;
-      descripcion = ctx.request.body.descripcion;
-      precio = ctx.request.body.precio;
-      imagen = ctx.request.body.imagen;
-
-      if (!nombre || !descripcion || !precio || ! imagen) {
-        ctx.response.body = "input invalido";
-        ctx.response.status = 400;
-        return
-      }
-
-      console.log(Object.keys(ctx.request.body))
-      const set = new Set(Object.keys(ctx.request.body));
-
-      if (set.size != 4) {
-        ctx.response.body = "input invalido";
-        ctx.response.status = 400;
-        return
-      }
-
-      var hamburguesas = await ctx.orm.hamburguesa.findAll({
-        attributes: [[Sequelize.fn('max', Sequelize.col('id')), 'max_id']],
-        raw: true,
-      });
-
-      var max_id = hamburguesas[0].max_id 
-
-      if (!hamburguesas[0].max_id) {
-        max_id = 1;
-        console.log('No habian hamburguesas')
-      }
-      else {
-        max_id++ 
-      }
-
-      const hamburguesa = {
-        id: max_id,
-        nombre: nombre,
-        descripcion: descripcion,
-        precio: precio,
-        imagen: imagen
-      };
-      
-      console.log("parametros: ", hamburguesa)
-    
-      // Save hamburguesa in the database
-      const new_hamburguesa = ctx.orm.hamburguesa.build(hamburguesa);
-      new_hamburguesa.save()
-      ctx.response.body = hamburguesa;
-      ctx.response.message = 'hamburguesa creada'
-      ctx.response.status = 201;
-    });
 
 
  // DELTE ONE Hamburger with an id
@@ -178,6 +191,7 @@ router.post('hamburguesa', '/', async (ctx) => {
 
     if (!isInteger(id_)) {
         ctx.response.body = "hamburguesa inexistente";
+        ctx.response.message = "hamburguesa inexistente";
         ctx.response.status = 404;
         console.log('id integer:', isInteger(id_))
         return
@@ -189,6 +203,7 @@ router.post('hamburguesa', '/', async (ctx) => {
 
       if (hamburguesa) {
         hamburguesa.destroy();
+        ctx.response.message = "hamburguesa eliminada";
         ctx.response.body = "hamburguesa eliminada";
         ctx.response.status = 200;
         console.log("200")
@@ -210,6 +225,7 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
 
   if (!isInteger(id_)) {
       ctx.response.body = "paramtros invalidos";
+      ctx.response.message = "paramtros invalidos";
       ctx.response.status = 400;
       console.log('id invalido:')
       return
@@ -221,6 +237,7 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
   imagen = ctx.request.body.imagen;
 
   if (!nombre && !descripcion && !precio && !imagen) {
+    ctx.response.message = "parametros invalidos";
     ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
     console.log('parametros invalido, falta al menos 1')
@@ -263,7 +280,8 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
 
       // tengo parametro extra?
       if (n_input != set.size) {
-        ctx.response.body = "paramtros invalidos";
+        ctx.response.body = "parametros invalidos";
+        ctx.response.message = "parametros invalidos";
         ctx.response.status = 400;
         console.log('n_input: ', n_input)
         console.log('set.size: ', set.size)
@@ -279,7 +297,9 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
                             'nombre': hamburguesa.nombre, 
                             'precio': hamburguesa.precio, 
                             'descripcion': hamburguesa.descripcion, 
-                            'imagen': hamburguesa.imagen};
+                            'imagen': hamburguesa.imagen
+                          };
+      ctx.response.message = "peracion exitosa"
       ctx.response.status = 200;
       console.log("200")
       return
@@ -287,6 +307,7 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
     } else {
       console.log("404 else")
       ctx.response.body = "hamburguesa inexistente";
+      ctx.response.message = "hamburguesa inexistente";
       ctx.response.status = 404;
       
     }

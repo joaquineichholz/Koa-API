@@ -15,6 +15,7 @@ router.get('ingrediente', '/', async (ctx) => {
     console.log(ingredientes);
 
     ctx.response.body = ingredientes;
+    ctx.response.message = "resultados obtenidos";
     ctx.response.status = 200;
  });
 
@@ -28,6 +29,7 @@ router.get('ingrediente', '/', async (ctx) => {
 
     if (!isInteger(id_)) {
         ctx.response.body = "id invalido";
+        ctx.response.message = "id invalido";
         ctx.response.status = 400;
         console.log('id integer:', isInteger(id_))
         return
@@ -39,12 +41,14 @@ router.get('ingrediente', '/', async (ctx) => {
 
       if (ingrediente) {
         ctx.response.body = ingrediente;
+        ctx.response.message = "operacion exitosa";
         ctx.response.status = 200;
         console.log("200")
 
       } else {
         console.log("404 else")
         ctx.response.body = "ingrediente inexistente";
+        ctx.response.message = "ingrediente inexistente";
         ctx.response.status = 404;
       }
     })
@@ -63,6 +67,7 @@ router.post('ingrediente', '/', async (ctx) => {
 
       if (!id || !nombre || !descripcion) {
         ctx.response.body = "input invalido";
+        ctx.response.message = "input invalido";
         ctx.response.status = 400;
         console.log('-- falta un input -- ')
         return
@@ -70,6 +75,7 @@ router.post('ingrediente', '/', async (ctx) => {
 
       if (!isInteger(id)) {
         ctx.response.body = "input invalido";
+        ctx.response.message = "input invalido";
         ctx.response.status = 400;
         console.log('-- el id del ingrediente id no es un numero -- ')
         return 
@@ -80,6 +86,7 @@ router.post('ingrediente', '/', async (ctx) => {
 
       if (set.size != 3) {
         ctx.response.body = "input invalido";
+        ctx.response.message = "input invalido";
         ctx.response.status = 400;
         console.log('-- el numero de inputs no es 3 -- ')
         return
@@ -90,6 +97,7 @@ router.post('ingrediente', '/', async (ctx) => {
       });
   
         if (ingrediente_) {
+          ctx.response.message = "input invalido";
           ctx.response.body = "input invalido";
           ctx.response.status = 400;
           console.log('-- el id del ingrediente ya existia -- ')
@@ -123,6 +131,7 @@ router.post('ingrediente', '/', async (ctx) => {
 
     if (!isInteger(id_)) {
         ctx.response.body = "ingrediente inexistente";
+        ctx.response.message = "ingrediente inexistente";
         ctx.response.status = 404;
         console.log('id integer:', isInteger(id_))
         return
@@ -135,12 +144,14 @@ router.post('ingrediente', '/', async (ctx) => {
       if (ingrediente) {
         ingrediente.destroy();
         ctx.response.body = "ingrediente eliminada";
+        ctx.response.message = "ingrediente eliminada";
         ctx.response.status = 200;
         console.log("200")
 
       } else {
         console.log("404 else")
         ctx.response.body = "ingrediente inexistente";
+        ctx.response.message = "ingrediente inexistente";
         ctx.response.status = 404;
       }
     })
