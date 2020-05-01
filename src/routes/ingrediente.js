@@ -61,11 +61,11 @@ router.post('ingrediente', '/', async (ctx) => {
       function isInteger(x) { return (Number.isInteger(Number(x))); }
 
       
-      id = ctx.request.body.id;
+      //id = ctx.request.body.id;
       nombre = ctx.request.body.nombre;
       descripcion = ctx.request.body.descripcion;
 
-      if (!id || !nombre || !descripcion) {
+      if (!nombre || !descripcion) {
         ctx.response.body = "input invalido";
         ctx.response.message = "input invalido";
         ctx.response.status = 400;
@@ -73,18 +73,18 @@ router.post('ingrediente', '/', async (ctx) => {
         return
       }
 
-      if (!isInteger(id)) {
+      /*if (!isInteger(id)) {
         ctx.response.body = "input invalido";
         ctx.response.message = "input invalido";
         ctx.response.status = 400;
         console.log('-- el id del ingrediente id no es un numero -- ')
         return 
-      }
+      }*/
 
       console.log(Object.keys(ctx.request.body))
       const set = new Set(Object.keys(ctx.request.body));
 
-      if (set.size != 3) {
+      if (set.size != 2){//3) {
         ctx.response.body = "input invalido";
         ctx.response.message = "input invalido";
         ctx.response.status = 400;
@@ -92,7 +92,7 @@ router.post('ingrediente', '/', async (ctx) => {
         return
       }
 
-      const ingrediente_ = await ctx.orm.ingrediente.findByPk(id,{
+      /*const ingrediente_ = await ctx.orm.ingrediente.findByPk(id,{
         attributes: ['id', 'nombre', 'descripcion']
       });
   
@@ -103,9 +103,25 @@ router.post('ingrediente', '/', async (ctx) => {
           console.log('-- el id del ingrediente ya existia -- ')
           return
   
+        }*/
+
+        var id = await ctx.orm.ingrediente.findAll({
+          attributes: [[Sequelize.fn('max', Sequelize.col('id')), 'max_id']],
+          raw: true,
+        });
+    
+        var max_id = id[0].max_id 
+
+        if (!id[0].max_id) {
+          max_id = 1;
+          console.log('No habian hamburguesas')
         }
+        else {
+          max_id++ 
+        }
+
       const ingrediente = {
-        id: id,
+        id: max_id,
         nombre: nombre,
         descripcion: descripcion,
       };
@@ -115,7 +131,7 @@ router.post('ingrediente', '/', async (ctx) => {
       // Save ingrediente in the database
       const new_ingrediente = ctx.orm.ingrediente.build(ingrediente);
       new_ingrediente.save()
-      ctx.response.body = ingrediente;
+      ctx.response.body = new_ingrediente;
       ctx.response.message = 'ingrediente creada'
       ctx.response.status = 200;
     });
