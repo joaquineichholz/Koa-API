@@ -133,7 +133,7 @@ router.post('ingrediente', '/', async (ctx) => {
       new_ingrediente.save()
       ctx.response.body = new_ingrediente;
       ctx.response.message = 'ingrediente creada'
-      ctx.response.status = 200;
+      ctx.response.status = 201;
     });
 
 
