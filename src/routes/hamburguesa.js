@@ -105,10 +105,10 @@ router.post('hamburguesa', '/', async (ctx) => {
     new_hamburguesa.save()
 
     const output = {
-      "id": hamburguesas.id,
-      "nombre": hamburguesas.nombre,
-      "precio": hamburguesas.precio,
-      "descripcion": hamburguesas.descripcion,
+      "id": new_hamburguesa.id,
+      "nombre": new_hamburguesa.nombre,
+      "precio": new_hamburguesa.precio,
+      "descripcion": new_hamburguesa.descripcion,
       "ingredientes": [
         {
 
