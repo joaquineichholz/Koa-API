@@ -157,6 +157,21 @@ router.post('ingrediente', '/', async (ctx) => {
       attributes: ['id', 'nombre', 'descripcion']
     });
 
+    const esta_en_hamburguesa = await ctx.orm.hamburguesa_ingrediente.findAll({
+      attributes: ['id', 'hamburguesaId', 'ingredienteId'],
+      where: {
+        'ingredienteId': id_
+      }, 
+      raw: true
+    });
+
+    if (existe.length > 0) {
+      ctx.response.message = 'Ingrediente no se puede borrar, se encuentra presente en una hamburguesa';
+      ctx.response.body = 'Ingrediente no se puede borrar, se encuentra presente en una hamburguesa';
+      ctx.response.status = 409;
+      return
+    }
+
       if (ingrediente) {
         ingrediente.destroy();
         ctx.response.body = "ingrediente eliminada";

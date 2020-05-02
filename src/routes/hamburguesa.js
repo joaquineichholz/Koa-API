@@ -109,11 +109,7 @@ router.post('hamburguesa', '/', async (ctx) => {
       "nombre": new_hamburguesa.nombre,
       "precio": new_hamburguesa.precio,
       "descripcion": new_hamburguesa.descripcion,
-      "ingredientes": [
-        {
-
-        }
-      ]
+      "ingredientes": []
     }
     ctx.response.body = output;
     ctx.response.message = 'hamburguesa creada'
