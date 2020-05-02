@@ -165,7 +165,7 @@ router.post('ingrediente', '/', async (ctx) => {
       raw: true
     });
 
-    if (existe.length > 0) {
+    if (esta_en_hamburguesa.length > 0) {
       ctx.response.message = 'Ingrediente no se puede borrar, se encuentra presente en una hamburguesa';
       ctx.response.body = 'Ingrediente no se puede borrar, se encuentra presente en una hamburguesa';
       ctx.response.status = 409;
