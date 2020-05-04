@@ -254,29 +254,29 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
     return
   }
   if (precio && !isInteger(precio)){  
-    ctx.response.body = "input invalido";
-    ctx.response.message = "input invalido";
+    ctx.response.message = "parametros invalidos";
+    ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
     return
   }
 
   if (nombre && !isInteger(nombre)){  
-    ctx.response.body = "input invalido";
-    ctx.response.message = "input invalido";
+    ctx.response.message = "parametros invalidos";
+    ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
     return
   }
 
   if (descripcion && !isString(descripcion)){  
-    ctx.response.body = "input invalido";
-    ctx.response.message = "input invalido";
+    ctx.response.message = "parametros invalidos";
+    ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
     return
   }
 
   if (imagen && !isString(imagen)){  
-    ctx.response.body = "input invalido";
-    ctx.response.message = "input invalido";
+    ctx.response.message = "parametros invalidos";
+    ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
     return
   }
