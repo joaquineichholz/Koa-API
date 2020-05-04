@@ -260,7 +260,7 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
     return
   }
 
-  if (nombre && !isInteger(nombre)){  
+  if (nombre && !isString(nombre)){  
     ctx.response.message = "parametros invalidos";
     ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;

@@ -73,7 +73,7 @@ router.post('ingrediente', '/', async (ctx) => {
         return
       }
 
-      if (!isInteger(nombre)){  
+      if (!isString(nombre)){  
         ctx.response.body = "input invalido";
         ctx.response.message = "input invalido";
         ctx.response.status = 400;
