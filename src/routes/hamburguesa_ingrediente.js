@@ -5,6 +5,8 @@ const Sequelize = require('sequelize');
 const router = new KoaRouter();
 
 
+function isInteger(x) { return (Number.isInteger(Number(x))); }
+
 
 // GET hamburguesa_ingrediente
 router.get('hamburguesa_ingrediente', '/', async (ctx) => {
@@ -26,7 +28,6 @@ router.put('hamburguesa', '/:hamburguesaId/ingrediente/:ingredienteId', async (c
       // Create a ingrediente
       console.log("agregar ingrediente")
 
-      function isInteger(x) { return (Number.isInteger(Number(x))); }
       
       hid = ctx.params.hamburguesaId;
       iid = ctx.params.ingredienteId;
@@ -112,8 +113,6 @@ router.put('hamburguesa', '/:hamburguesaId/ingrediente/:ingredienteId', async (c
  router.del('hamburguesa', '/:hamburguesaId/ingrediente/:ingredienteId', async (ctx) => {
 
   console.log("sacar ingrediente")
-
-  function isInteger(x) { return (Number.isInteger(Number(x))); }
   
   hid = ctx.params.hamburguesaId;
   iid = ctx.params.ingredienteId;

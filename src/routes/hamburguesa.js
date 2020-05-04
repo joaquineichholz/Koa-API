@@ -5,6 +5,13 @@ const Sequelize = require('sequelize');
 const router = new KoaRouter();
 
 
+function isString (obj) {
+  return (Object.prototype.toString.call(obj) === '[object String]');
+}
+
+function isInteger(x) { return (Number.isInteger(Number(x))); }
+
+
 // GET Burguers
 router.get('hamburguesa', '/', async (ctx) => {
   console.log("Buscar hamburguesa");
@@ -64,6 +71,14 @@ router.post('hamburguesa', '/', async (ctx) => {
       ctx.response.status = 400;
       return
     }
+    if (!isInteger(precio) || !isString(nombre) || !isString(descripcion) || !isString(imagen)) {
+      ctx.response.body = "input invalido";
+      ctx.response.message = "input invalido";
+      ctx.response.status = 400;
+      return
+    }
+
+    
 
     console.log(Object.keys(ctx.request.body))
     const set = new Set(Object.keys(ctx.request.body));
@@ -121,7 +136,6 @@ router.post('hamburguesa', '/', async (ctx) => {
  router.get('/hamburguesa', '/:id', async (ctx) => {
   console.log('GET ONE')
 
-  function isInteger(x) { return (Number.isInteger(Number(x))); }
 
   const id_ = ctx.params.id;
 
@@ -182,7 +196,6 @@ router.post('hamburguesa', '/', async (ctx) => {
  router.del('/hamburguesa', '/:id', async (ctx) => {
   console.log('DELETE ONE')
 
-  function isInteger(x) { return (Number.isInteger(Number(x))); }
 
   const id_ = ctx.params.id;
 
@@ -238,6 +251,33 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
     ctx.response.body = "parametros invalidos";
     ctx.response.status = 400;
     console.log('parametros invalido, falta al menos 1')
+    return
+  }
+  if (precio && !isInteger(precio)){  
+    ctx.response.body = "input invalido";
+    ctx.response.message = "input invalido";
+    ctx.response.status = 400;
+    return
+  }
+
+  if (nombre && !isInteger(nombre)){  
+    ctx.response.body = "input invalido";
+    ctx.response.message = "input invalido";
+    ctx.response.status = 400;
+    return
+  }
+
+  if (descripcion && !isString(descripcion)){  
+    ctx.response.body = "input invalido";
+    ctx.response.message = "input invalido";
+    ctx.response.status = 400;
+    return
+  }
+
+  if (imagen && !isString(imagen)){  
+    ctx.response.body = "input invalido";
+    ctx.response.message = "input invalido";
+    ctx.response.status = 400;
     return
   }
 
