@@ -4,7 +4,9 @@ const Sequelize = require('sequelize');
 
 const router = new KoaRouter();
 
-
+function isString (obj) {
+  return (Object.prototype.toString.call(obj) === '[object String]');
+}
 // GET ingediente
 router.get('ingrediente', '/', async (ctx) => {
   console.log("Buscar ingrediente");
@@ -145,7 +147,7 @@ router.post('ingrediente', '/', async (ctx) => {
       // Save ingrediente in the database
       const new_ingrediente = ctx.orm.ingrediente.build(ingrediente);
       new_ingrediente.save()
-      ctx.response.body = new_ingrediente;
+      ctx.response.body = ingrediente;
       ctx.response.message = 'ingrediente creada'
       ctx.response.status = 201;
     });
