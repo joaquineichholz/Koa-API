@@ -329,7 +329,6 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
       }
 
       console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", hamburguesa, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
-      if (hamburguesa) {
         const hamburguesa_ingrediente = await ctx.orm.hamburguesa_ingrediente.findAll({
           attributes: ['ingredienteId'],
           where: {
@@ -349,7 +348,7 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
 
       hamburguesa.update(ctx.request.body)
       await hamburguesa.save();
-      
+      Z
       ctx.response.body = {'id': hamburguesa.id, 
                             'nombre': hamburguesa.nombre, 
                             'precio': hamburguesa.precio, 
