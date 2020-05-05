@@ -170,16 +170,14 @@ router.post('hamburguesa', '/', async (ctx) => {
         }
 
 
-        ctx.response.body = {"menssage": "operacion exitosa", 
-        "body": 
-          {
+        ctx.response.body = {
           "id": hamburguesa.id,
           "nombre": hamburguesa.nombre,
           "precio": hamburguesa.precio,
           "descripcion": hamburguesa.descripcion,
           "imagen": hamburguesa.imagen,
           "ingredientes": ingredientes
-        }};
+        };
 
         ctx.response.status = 200;
         console.log("200")
