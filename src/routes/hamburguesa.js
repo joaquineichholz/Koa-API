@@ -231,22 +231,23 @@ router.post('hamburguesa', '/', async (ctx) => {
 // PATCH ONE Hamburger with an id
 router.patch('hamburguesa', '/:id', async (ctx) => {
   console.log('patch burger')
-  function isInteger(x) { return (Number.isInteger(Number(x))); }
 
   const id_ = ctx.params.id;
 
-  if (!isInteger(id_)) {
+  /*if (!isInteger(id_)) {
       ctx.response.body = "paramtros invalidos";
       ctx.response.message = "paramtros invalidos";
       ctx.response.status = 400;
       console.log('id invalido:')
       return
-    };
+    };*/
 
   nombre = ctx.request.body.nombre;
   descripcion = ctx.request.body.descripcion;
   precio = ctx.request.body.precio;
   imagen = ctx.request.body.imagen;
+
+  console.log(ctx.request.body)
 
   if (!nombre && !descripcion && !precio && !imagen) {
     ctx.response.message = "parametros invalidos";
@@ -257,7 +258,7 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
   }
   if (precio && !isInteger(precio)){  
     ctx.response.message = "parametros invalidos";
-    ctx.response.body = "parametros invalidos";
+    ctx.response.body = "parametros invalidos mal precio ";
     ctx.response.status = 400;
     return
   }
@@ -298,23 +299,27 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
   })
     if (hamburguesa) {
 
-      var n_input = 5;
+      var n_input = 0;
 
       if (nombre) {
+        console.log('nombre', nombre)
         nombre = hamburguesa.nombre;
-        n_input--
+        n_input++
       }
-      if (!precio) {
+      if (precio) {
+        console.log('precio', precio)
         precio = hamburguesa.precio;
-        n_input--
+        n_input++
       }
-      if (!descripcion) {
+      if (descripcion) {
+        console.log('descripcion', descripcion)
         descripcion = hamburguesa.descripcion;
-        n_input--
+        n_input++
       }
-      if (!imagen) {
+      if (imagen) {
+        console.log('imagen', imagen)
         imagen = hamburguesa.imagen;
-        n_input--
+        n_input++
       }
 
       // tengo parametro extra?
@@ -337,6 +342,8 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
           raw: true
         });
 
+
+        console.log('linea 341')
         var ingredientes = []
         for (i=0; i<hamburguesa_ingrediente.length; i++) {
           ingredientes.push({
@@ -344,11 +351,12 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
           });
         }
 
+        console.log('linea 34')
 
 
       hamburguesa.update(ctx.request.body)
       await hamburguesa.save();
-      Z
+      
       ctx.response.body = {'id': hamburguesa.id, 
                             'nombre': hamburguesa.nombre, 
                             'precio': hamburguesa.precio, 
