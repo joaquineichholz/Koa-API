@@ -43,6 +43,7 @@ router.get('hamburguesa', '/', async (ctx) => {
         "nombre": hamburguesas[x].nombre,
         "precio": hamburguesas[x].precio,
         "descripcion": hamburguesas[x].descripcion,
+        "imagen": hamburguesas[x].imagen,
         "ingredientes": ingredientes
       });
     }
