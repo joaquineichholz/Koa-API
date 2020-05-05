@@ -177,6 +177,7 @@ router.post('hamburguesa', '/', async (ctx) => {
           "nombre": hamburguesa.nombre,
           "precio": hamburguesa.precio,
           "descripcion": hamburguesa.descripcion,
+          "imagen": hamburguesa.imagen,
           "ingredientes": ingredientes
         }};
 
@@ -328,14 +329,33 @@ router.patch('hamburguesa', '/:id', async (ctx) => {
       }
 
       console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n\thamburguesa", hamburguesa, '\n\n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+      if (hamburguesa) {
+        const hamburguesa_ingrediente = await ctx.orm.hamburguesa_ingrediente.findAll({
+          attributes: ['ingredienteId'],
+          where: {
+            'hamburguesaId': hamburguesa.id
+          }, 
+          raw: true
+        });
+
+        var ingredientes = []
+        for (i=0; i<hamburguesa_ingrediente.length; i++) {
+          ingredientes.push({
+            "path": "https://" + ctx.request.host + "/ingrediente/" + hamburguesa_ingrediente[i].ingredienteId
+          });
+        }
+
+
 
       hamburguesa.update(ctx.request.body)
       await hamburguesa.save();
+      
       ctx.response.body = {'id': hamburguesa.id, 
                             'nombre': hamburguesa.nombre, 
                             'precio': hamburguesa.precio, 
                             'descripcion': hamburguesa.descripcion, 
-                            'imagen': hamburguesa.imagen
+                            'imagen': hamburguesa.imagen,
+                            "ingredientes": ingredientes
                           };
       ctx.response.message = "peracion exitosa"
       ctx.response.status = 200;
